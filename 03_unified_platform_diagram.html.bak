@@ -1,0 +1,889 @@
+<!--
+  MAAT Energy - Snippet 03: Unified Platform Diagram
+  Embed: Google Sites > Insert > Embed > Embed Code
+  Recommended section: Full-width, below the Five Pillars block
+-->
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Preview</title>
+  <style>
+    #maat-diagram {
+      --ink: #102c3d;
+      --body: #4e6574;
+      --line: #cfe0db;
+      --surface: #ffffff;
+      --surface-soft: rgba(255, 255, 255, 0.72);
+      --green: #178469;
+      --green-strong: #0c5c4b;
+      --mint: #dff3ed;
+      --navy: #12364b;
+      --navy-soft: #ddeaf2;
+      --glow: 0 18px 40px rgba(16, 71, 62, 0.14);
+      font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+      color: var(--ink);
+      line-height: 1.55;
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 40px 24px 48px;
+    }
+
+    #maat-diagram * {
+      box-sizing: border-box;
+    }
+
+    #maat-diagram .diagram-shell {
+      background:
+        radial-gradient(circle at top left, rgba(79, 209, 168, 0.22), transparent 30%),
+        radial-gradient(circle at bottom right, rgba(18, 54, 75, 0.12), transparent 32%),
+        linear-gradient(165deg, #f5fbf8 0%, #edf4f2 48%, #e9f0f4 100%);
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      padding: 24px;
+      overflow: hidden;
+    }
+
+    #maat-diagram h2 {
+      margin: 0 0 8px;
+      font-size: clamp(28px, 4vw, 42px);
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+      color: #0f2b3c;
+      font-weight: 800;
+    }
+
+    #maat-diagram .intro {
+      margin: 0 0 28px;
+      max-width: 68ch;
+      font-size: 16px;
+      color: var(--body);
+    }
+
+    #maat-diagram .control {
+      background: var(--surface-soft);
+      border: 1px solid rgba(207, 224, 219, 0.95);
+      border-radius: 14px;
+      padding: 14px 16px;
+      backdrop-filter: blur(8px);
+    }
+
+    #maat-diagram .control label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--green-strong);
+    }
+
+    #maat-diagram .control select {
+      width: 100%;
+      appearance: none;
+      border: 1px solid #bfd6ce;
+      border-radius: 10px;
+      padding: 12px 14px;
+      background: #fff;
+      color: var(--ink);
+      font-size: 14px;
+      font-weight: 600;
+      outline: none;
+      transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+    }
+
+    #maat-diagram .control select:focus,
+    #maat-diagram .control select:hover {
+      border-color: #7ebcaa;
+      box-shadow: 0 0 0 4px rgba(23, 132, 105, 0.12);
+      transform: translateY(-1px);
+    }
+
+    #maat-diagram .process-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(300px, 1.15fr) minmax(0, 1fr);
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    #maat-diagram .column-label {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 32px;
+      padding: 5px 14px;
+      margin-bottom: 14px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #fff;
+    }
+
+    #maat-diagram .column-label.inputs {
+      background: var(--green);
+    }
+
+    #maat-diagram .column-label.outputs {
+      background: var(--navy);
+    }
+
+    #maat-diagram .card-stack {
+      display: grid;
+      gap: 12px;
+    }
+
+    #maat-diagram .flow-card {
+      position: relative;
+      background: rgba(255, 255, 255, 0.92);
+      border: 1px solid rgba(207, 224, 219, 0.95);
+      border-radius: 16px;
+      padding: 14px;
+      box-shadow: 0 10px 24px rgba(15, 43, 60, 0.05);
+      transition:
+        transform 180ms ease,
+        box-shadow 180ms ease,
+        border-color 180ms ease,
+        background 180ms ease,
+        opacity 180ms ease;
+    }
+
+    #maat-diagram .flow-card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 180ms ease;
+    }
+
+    #maat-diagram .flow-card[data-group="input"]::after {
+      box-shadow: inset 0 0 0 1px rgba(23, 132, 105, 0.18);
+    }
+
+    #maat-diagram .flow-card[data-group="output"]::after {
+      box-shadow: inset 0 0 0 1px rgba(18, 54, 75, 0.18);
+    }
+
+    #maat-diagram .flow-card:hover,
+    #maat-diagram .flow-card:focus-within {
+      transform: translateY(-4px);
+      box-shadow: var(--glow);
+      border-color: #a9c9bf;
+    }
+
+    #maat-diagram .flow-card:hover::after,
+    #maat-diagram .flow-card.is-active::after {
+      opacity: 1;
+    }
+
+    #maat-diagram .flow-card.is-dimmed {
+      opacity: 0.42;
+    }
+
+    #maat-diagram .flow-card.is-active {
+      background: linear-gradient(180deg, #ffffff 0%, #f6fcfa 100%);
+      border-color: #79b9a6;
+      box-shadow: 0 18px 36px rgba(18, 76, 63, 0.16);
+    }
+
+    #maat-diagram .flow-card.output.is-active {
+      background: linear-gradient(180deg, #ffffff 0%, #f6fafe 100%);
+      border-color: #88abc3;
+    }
+
+    #maat-diagram .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    #maat-diagram .input .eyebrow {
+      color: var(--green);
+    }
+
+    #maat-diagram .output .eyebrow {
+      color: var(--navy);
+    }
+
+    #maat-diagram .flow-card h3,
+    #maat-diagram .flow-card strong {
+      display: block;
+      margin: 0 0 6px;
+      font-size: 16px;
+      line-height: 1.2;
+      color: #0f2b3c;
+    }
+
+    #maat-diagram .platform-copy p,
+    #maat-diagram .detail-panel p {
+      margin: 0;
+      font-size: 13px;
+      color: var(--body);
+    }
+
+    #maat-diagram .node-card {
+      min-height: 182px;
+      overflow: hidden;
+    }
+
+    #maat-diagram .node-top {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-height: 104px;
+    }
+
+    #maat-diagram .node-art {
+      position: relative;
+      flex: 0 0 92px;
+      width: 92px;
+      height: 92px;
+      border-radius: 22px;
+      overflow: hidden;
+      background: linear-gradient(180deg, #eef8f4 0%, #dcefe8 100%);
+      border: 1px solid rgba(121, 185, 166, 0.35);
+    }
+
+    #maat-diagram .output .node-art {
+      background: linear-gradient(180deg, #eff6fb 0%, #ddeaf5 100%);
+      border-color: rgba(136, 171, 195, 0.45);
+    }
+
+    #maat-diagram .node-meta {
+      min-width: 0;
+      flex: 1 1 auto;
+    }
+
+    #maat-diagram .node-title {
+      margin: 0;
+      font-size: 17px;
+      line-height: 1.15;
+    }
+
+    #maat-diagram .node-reveal {
+      max-height: 0;
+      overflow: hidden;
+      opacity: 0;
+      transition: max-height 220ms ease, opacity 180ms ease, margin-top 180ms ease;
+    }
+
+    #maat-diagram .node-reveal p {
+      margin: 0;
+      font-size: 13px;
+      color: var(--body);
+    }
+
+    #maat-diagram .flow-card:hover .node-reveal,
+    #maat-diagram .flow-card.is-active .node-reveal {
+      max-height: 96px;
+      margin-top: 10px;
+      opacity: 1;
+    }
+
+    #maat-diagram .mini-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 10px;
+    }
+
+    #maat-diagram .mini-tag {
+      display: inline-flex;
+      align-items: center;
+      padding: 5px 8px;
+      border-radius: 999px;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.03em;
+    }
+
+    #maat-diagram .input .mini-tag {
+      background: #e8f6f1;
+      color: #0d6150;
+    }
+
+    #maat-diagram .output .mini-tag {
+      background: #e8f0f8;
+      color: #163e56;
+    }
+
+    #maat-diagram .art-ring,
+    #maat-diagram .art-dot,
+    #maat-diagram .art-line,
+    #maat-diagram .art-cloud,
+    #maat-diagram .art-bolt,
+    #maat-diagram .art-beam,
+    #maat-diagram .art-hex,
+    #maat-diagram .art-bar,
+    #maat-diagram .art-cube {
+      position: absolute;
+    }
+
+    #maat-diagram .art-ring {
+      border: 2px solid rgba(23, 132, 105, 0.4);
+      border-radius: 50%;
+    }
+
+    #maat-diagram .output .art-ring {
+      border-color: rgba(18, 54, 75, 0.34);
+    }
+
+    #maat-diagram .art-dot {
+      border-radius: 50%;
+      background: #1a8a6e;
+      box-shadow: 0 0 0 6px rgba(26, 138, 110, 0.08);
+    }
+
+    #maat-diagram .output .art-dot {
+      background: #1c5b80;
+      box-shadow: 0 0 0 6px rgba(28, 91, 128, 0.08);
+    }
+
+    #maat-diagram .art-line {
+      height: 2px;
+      background: linear-gradient(90deg, rgba(23, 132, 105, 0.2), rgba(23, 132, 105, 0.75));
+      transform-origin: left center;
+    }
+
+    #maat-diagram .output .art-line {
+      background: linear-gradient(90deg, rgba(28, 91, 128, 0.18), rgba(28, 91, 128, 0.8));
+    }
+
+    #maat-diagram .art-cloud {
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.88);
+      border: 1px solid rgba(23, 132, 105, 0.16);
+    }
+
+    #maat-diagram .art-bolt {
+      width: 30px;
+      height: 48px;
+      background: linear-gradient(180deg, #29b28f 0%, #0e6755 100%);
+      clip-path: polygon(58% 0%, 100% 0%, 66% 40%, 88% 40%, 24% 100%, 42% 58%, 12% 58%);
+      filter: drop-shadow(0 8px 12px rgba(14, 98, 81, 0.25));
+    }
+
+    #maat-diagram .art-beam {
+      width: 66px;
+      height: 10px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(41, 178, 143, 0.9), rgba(255, 255, 255, 0));
+    }
+
+    #maat-diagram .art-hex {
+      width: 34px;
+      height: 34px;
+      background: linear-gradient(180deg, #1f6b91 0%, #0f3d57 100%);
+      clip-path: polygon(25% 6%, 75% 6%, 100% 50%, 75% 94%, 25% 94%, 0% 50%);
+      box-shadow: 0 8px 14px rgba(15, 61, 87, 0.2);
+    }
+
+    #maat-diagram .art-bar {
+      width: 10px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, #7cb7dc 0%, #1c5b80 100%);
+    }
+
+    #maat-diagram .art-cube {
+      width: 24px;
+      height: 24px;
+      background: linear-gradient(180deg, #1f6b91 0%, #143f58 100%);
+      transform: rotate(45deg);
+      border-radius: 4px;
+      box-shadow: 0 8px 16px rgba(20, 63, 88, 0.18);
+    }
+
+    #maat-diagram .card-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 12px;
+    }
+
+    #maat-diagram .tag {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    #maat-diagram .input .tag {
+      background: var(--mint);
+      color: var(--green-strong);
+    }
+
+    #maat-diagram .output .tag {
+      background: var(--navy-soft);
+      color: var(--navy);
+    }
+
+    #maat-diagram .platform-card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 24px 20px;
+      border-radius: 22px;
+      border: 1px solid #c7dcd5;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(241, 249, 246, 0.96) 100%);
+      box-shadow: var(--glow);
+      text-align: center;
+      overflow: hidden;
+    }
+
+    #maat-diagram .platform-card::before,
+    #maat-diagram .platform-card::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      width: 26px;
+      height: 2px;
+      background: linear-gradient(90deg, rgba(23, 132, 105, 0.18), rgba(23, 132, 105, 0.7));
+      transform: translateY(-50%);
+    }
+
+    #maat-diagram .platform-card::before {
+      left: -8px;
+    }
+
+    #maat-diagram .platform-card::after {
+      right: -8px;
+      background: linear-gradient(90deg, rgba(18, 54, 75, 0.7), rgba(18, 54, 75, 0.18));
+    }
+
+    #maat-diagram .orb {
+      width: 170px;
+      height: 170px;
+      margin-bottom: 18px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      text-align: center;
+      background:
+        radial-gradient(circle at 48% 40%, #62edcc 0%, #1a8a6e 32%, #0f5b4c 62%, #0a2e28 100%);
+      box-shadow:
+        0 18px 42px rgba(14, 98, 81, 0.3),
+        inset 0 0 30px rgba(255, 255, 255, 0.12);
+      transition: transform 220ms ease, box-shadow 220ms ease;
+    }
+
+    #maat-diagram .platform-card:hover .orb {
+      transform: scale(1.03);
+      box-shadow:
+        0 22px 48px rgba(14, 98, 81, 0.34),
+        inset 0 0 34px rgba(255, 255, 255, 0.14);
+    }
+
+    #maat-diagram .orb strong {
+      display: block;
+      font-size: 15px;
+      line-height: 1.2;
+      letter-spacing: 0.01em;
+    }
+
+    #maat-diagram .platform-copy h3 {
+      margin: 0 0 8px;
+      font-size: 24px;
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+      color: #0f2b3c;
+      font-weight: 800;
+    }
+
+    #maat-diagram .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 18px;
+    }
+
+    #maat-diagram .pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 7px 11px;
+      border-radius: 999px;
+      border: 1px solid #c7dcd5;
+      background: #e9f5f1;
+      color: #0e6251;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    #maat-diagram .detail-panel {
+      margin-top: 18px;
+      width: 100%;
+      border-radius: 16px;
+      padding: 16px;
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(199, 220, 213, 0.95);
+      text-align: left;
+    }
+
+    #maat-diagram .detail-panel strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 13px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--green-strong);
+    }
+
+    @media (max-width: 980px) {
+      #maat-diagram .process-grid {
+        grid-template-columns: 1fr;
+      }
+
+      #maat-diagram .platform-card::before,
+      #maat-diagram .platform-card::after {
+        display: none;
+      }
+    }
+
+    @media (max-width: 760px) {
+      #maat-diagram {
+        padding: 32px 16px 40px;
+      }
+
+      #maat-diagram .diagram-shell {
+        padding: 18px;
+      }
+
+      #maat-diagram .orb {
+        width: 148px;
+        height: 148px;
+      }
+
+      #maat-diagram .node-top {
+        align-items: flex-start;
+      }
+
+      #maat-diagram .node-art {
+        flex-basis: 78px;
+        width: 78px;
+        height: 78px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div id="maat-diagram">
+  <h2>Unified Platform Diagram</h2>
+  <p class="intro">One integrated system: flexible feedstocks enter a single AMP plasma platform, then branch into product pathways based on application and economics.</p>
+
+  <div class="diagram-shell">
+    <div class="control" style="margin-bottom: 22px; max-width: 340px;">
+      <label for="maat-output-filter">Highlight Product Path</label>
+      <select id="maat-output-filter">
+        <option value="all">Show all outputs</option>
+        <option value="co">Carbon monoxide</option>
+        <option value="hydrogen">Hydrogen</option>
+        <option value="carbon">Carbon materials / solid carbon</option>
+        <option value="syngas">Syngas</option>
+      </select>
+    </div>
+
+    <div class="process-grid">
+      <div>
+        <div class="column-label inputs">Inputs</div>
+        <div class="card-stack">
+          <article class="flow-card input node-card" data-group="input" data-key="co2">
+            <div class="node-top">
+              <div class="node-art" aria-hidden="true">
+                <span class="art-ring" style="width: 58px; height: 58px; left: 17px; top: 17px;"></span>
+                <span class="art-ring" style="width: 30px; height: 30px; left: 31px; top: 31px;"></span>
+                <span class="art-cloud" style="width: 44px; height: 18px; left: 24px; top: 14px;"></span>
+                <span class="art-cloud" style="width: 26px; height: 14px; left: 18px; top: 22px;"></span>
+                <span class="art-cloud" style="width: 28px; height: 14px; left: 46px; top: 22px;"></span>
+                <span class="art-dot" style="width: 10px; height: 10px; left: 40px; top: 42px;"></span>
+              </div>
+              <div class="node-meta">
+                <div class="eyebrow">Carbon Input</div>
+                <strong class="node-title">Captured CO2</strong>
+                <div class="mini-tags">
+                  <span class="mini-tag">Utilization-ready</span>
+                  <span class="mini-tag">Point source</span>
+                </div>
+              </div>
+            </div>
+            <div class="node-reveal">
+              <p>Carbon feed for utilization, dry reforming, and carbon-to-value pathways.</p>
+            </div>
+          </article>
+
+          <article class="flow-card input node-card" data-group="input" data-key="hydrocarbons">
+            <div class="node-top">
+              <div class="node-art" aria-hidden="true">
+                <span class="art-dot" style="width: 14px; height: 14px; left: 16px; top: 38px;"></span>
+                <span class="art-dot" style="width: 14px; height: 14px; left: 62px; top: 24px;"></span>
+                <span class="art-dot" style="width: 12px; height: 12px; left: 58px; top: 58px;"></span>
+                <span class="art-dot" style="width: 10px; height: 10px; left: 34px; top: 18px;"></span>
+                <span class="art-line" style="width: 30px; left: 25px; top: 44px; transform: rotate(-20deg);"></span>
+                <span class="art-line" style="width: 28px; left: 40px; top: 31px; transform: rotate(25deg);"></span>
+                <span class="art-line" style="width: 26px; left: 39px; top: 55px; transform: rotate(-16deg);"></span>
+              </div>
+              <div class="node-meta">
+                <div class="eyebrow">Flexible Feed Slate</div>
+                <strong class="node-title">Methane + Hydrocarbons</strong>
+                <div class="mini-tags">
+                  <span class="mini-tag">Natural gas</span>
+                  <span class="mini-tag">Biogas</span>
+                </div>
+              </div>
+            </div>
+            <div class="node-reveal">
+              <p>Natural gas, biogas, and related hydrocarbons provide a single combined feed category for reforming and pyrolysis.</p>
+            </div>
+          </article>
+
+          <article class="flow-card input node-card" data-group="input" data-key="energy">
+            <div class="node-top">
+              <div class="node-art" aria-hidden="true">
+                <span class="art-beam" style="left: 12px; top: 20px;"></span>
+                <span class="art-beam" style="left: 12px; top: 61px;"></span>
+                <span class="art-bolt" style="left: 31px; top: 22px;"></span>
+              </div>
+              <div class="node-meta">
+                <div class="eyebrow">Power Input</div>
+                <strong class="node-title">Electricity / Microwave Energy</strong>
+                <div class="mini-tags">
+                  <span class="mini-tag">Plasma power</span>
+                  <span class="mini-tag">Dynamic control</span>
+                </div>
+              </div>
+            </div>
+            <div class="node-reveal">
+              <p>Dynamic electrical input drives plasma conversion with fast response and modular operation.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+
+      <section class="platform-card" aria-label="MAAT AMP Plasma Platform">
+        <div class="orb">
+          <strong>MAAT AMP<br />Plasma Platform</strong>
+        </div>
+
+        <div class="platform-copy">
+          <h3>One platform, multiple pathways</h3>
+          <p>Modular low-temperature plasma architecture spanning dry reforming and methane pyrolysis, with outputs tuned to commercial fit.</p>
+        </div>
+
+        <div class="pill-row">
+          <span class="pill">Modular Low-Temp Plasma</span>
+          <span class="pill">Dry Reforming + Pyrolysis</span>
+          <span class="pill">Zero Impedance</span>
+          <span class="pill">Full Power Conversion</span>
+          <span class="pill">Low-Capex Architecture</span>
+        </div>
+
+        <div class="detail-panel">
+          <strong id="maat-detail-title">Current View</strong>
+          <p id="maat-detail-copy">Use the dropdowns or hover over a card to focus the diagram. The platform stays constant while the feed and product emphasis changes.</p>
+        </div>
+      </section>
+
+      <div>
+        <div class="column-label outputs">Outputs</div>
+        <div class="card-stack">
+          <article class="flow-card output node-card" data-group="output" data-key="co">
+            <div class="node-top">
+              <div class="node-art" aria-hidden="true">
+                <span class="art-ring" style="width: 46px; height: 46px; left: 12px; top: 23px;"></span>
+                <span class="art-ring" style="width: 24px; height: 24px; left: 56px; top: 34px;"></span>
+                <span class="art-line" style="width: 20px; left: 44px; top: 46px;"></span>
+                <span class="art-dot" style="width: 10px; height: 10px; left: 29px; top: 41px;"></span>
+                <span class="art-dot" style="width: 10px; height: 10px; left: 64px; top: 41px;"></span>
+              </div>
+              <div class="node-meta">
+                <div class="eyebrow">Synthesis Feedstock</div>
+                <strong class="node-title">Carbon Monoxide</strong>
+                <div class="mini-tags">
+                  <span class="mini-tag">Intermediate</span>
+                  <span class="mini-tag">Synthesis-ready</span>
+                </div>
+              </div>
+            </div>
+            <div class="node-reveal">
+              <p>Feedstock for downstream synthesis, fuels, and other carbon-to-value products.</p>
+            </div>
+          </article>
+
+          <article class="flow-card output node-card" data-group="output" data-key="hydrogen">
+            <div class="node-top">
+              <div class="node-art" aria-hidden="true">
+                <span class="art-dot" style="width: 12px; height: 12px; left: 18px; top: 40px;"></span>
+                <span class="art-dot" style="width: 12px; height: 12px; left: 62px; top: 40px;"></span>
+                <span class="art-line" style="width: 34px; left: 29px; top: 45px;"></span>
+                <span class="art-ring" style="width: 66px; height: 66px; left: 13px; top: 13px;"></span>
+              </div>
+              <div class="node-meta">
+                <div class="eyebrow">Energy Vector</div>
+                <strong class="node-title">Hydrogen</strong>
+                <div class="mini-tags">
+                  <span class="mini-tag">Industrial use</span>
+                  <span class="mini-tag">Energy storage</span>
+                </div>
+              </div>
+            </div>
+            <div class="node-reveal">
+              <p>Product pathway for blending, power support, and industrial decarbonization uses.</p>
+            </div>
+          </article>
+
+          <article class="flow-card output node-card" data-group="output" data-key="carbon">
+            <div class="node-top">
+              <div class="node-art" aria-hidden="true">
+                <span class="art-cube" style="left: 18px; top: 20px;"></span>
+                <span class="art-cube" style="left: 46px; top: 24px; width: 18px; height: 18px;"></span>
+                <span class="art-cube" style="left: 34px; top: 48px; width: 28px; height: 28px;"></span>
+              </div>
+              <div class="node-meta">
+                <div class="eyebrow">Carbon Product</div>
+                <strong class="node-title">Carbon Materials / Solid Carbon</strong>
+                <div class="mini-tags">
+                  <span class="mini-tag">Material value</span>
+                  <span class="mini-tag">Solid carbon</span>
+                </div>
+              </div>
+            </div>
+            <div class="node-reveal">
+              <p>Valuable solid-carbon outputs for additives, fillers, and advanced material pathways.</p>
+            </div>
+          </article>
+
+          <article class="flow-card output node-card" data-group="output" data-key="syngas">
+            <div class="node-top">
+              <div class="node-art" aria-hidden="true">
+                <span class="art-bar" style="height: 26px; left: 18px; bottom: 14px;"></span>
+                <span class="art-bar" style="height: 42px; left: 34px; bottom: 14px;"></span>
+                <span class="art-bar" style="height: 58px; left: 50px; bottom: 14px;"></span>
+                <span class="art-hex" style="left: 52px; top: 12px;"></span>
+              </div>
+              <div class="node-meta">
+                <div class="eyebrow">Flexible Intermediate</div>
+                <strong class="node-title">Syngas</strong>
+                <div class="mini-tags">
+                  <span class="mini-tag">Flexible ratio</span>
+                  <span class="mini-tag">Chemicals and fuels</span>
+                </div>
+              </div>
+            </div>
+            <div class="node-reveal">
+              <p>Adjustable intermediate for fuel, chemical, and synthesis routes where ratio flexibility matters.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  (function () {
+    var root = document.getElementById("maat-diagram");
+    if (!root) return;
+
+    var outputSelect = root.querySelector("#maat-output-filter");
+    var detailTitle = root.querySelector("#maat-detail-title");
+    var detailCopy = root.querySelector("#maat-detail-copy");
+    var cards = Array.prototype.slice.call(root.querySelectorAll(".flow-card"));
+
+    var detailMap = {
+      default: {
+        title: "Current View",
+        copy: "Use the dropdowns or hover over a card to focus the diagram. The platform stays constant while the feed and product emphasis changes."
+      },
+      co2: {
+        title: "Captured CO2",
+        copy: "CO2 enters the AMP platform as a carbon source for dry reforming and other utilization pathways."
+      },
+      hydrocarbons: {
+        title: "Methane + Hydrocarbons",
+        copy: "Methane, natural gas, biogas, and related hydrocarbons share one combined input lane for reforming and pyrolysis."
+      },
+      energy: {
+        title: "Electricity / Microwave Energy",
+        copy: "Electrical input powers the plasma state and supports dynamic, modular conversion control."
+      },
+      co: {
+        title: "Carbon Monoxide",
+        copy: "Carbon monoxide serves as a downstream synthesis feedstock for fuels, chemicals, and other carbon-value chains."
+      },
+      hydrogen: {
+        title: "Hydrogen",
+        copy: "Hydrogen can be prioritized for industrial use, energy applications, or decarbonization targets."
+      },
+      carbon: {
+        title: "Carbon Materials / Solid Carbon",
+        copy: "Solid-carbon outputs create a materials pathway alongside gaseous products."
+      },
+      syngas: {
+        title: "Syngas",
+        copy: "Syngas offers a flexible intermediate when downstream applications need adjustable product ratios."
+      }
+    };
+
+    function setDetail(key) {
+      var detail = detailMap[key] || detailMap.default;
+      detailTitle.textContent = detail.title;
+      detailCopy.textContent = detail.copy;
+    }
+
+    function updateCards() {
+      var outputValue = outputSelect.value;
+
+      cards.forEach(function (card) {
+        var group = card.getAttribute("data-group");
+        var key = card.getAttribute("data-key");
+        var selected = group === "input" ? "all" : outputValue;
+        var active = selected === "all" || selected === key;
+
+        card.classList.toggle("is-active", active);
+        card.classList.toggle("is-dimmed", !active);
+      });
+
+      if (outputValue !== "all") {
+        setDetail(outputValue);
+      } else {
+        setDetail("default");
+      }
+    }
+
+    cards.forEach(function (card) {
+      card.addEventListener("mouseenter", function () {
+        setDetail(card.getAttribute("data-key"));
+      });
+
+      card.addEventListener("mouseleave", function () {
+        updateCards();
+      });
+    });
+
+    outputSelect.addEventListener("change", updateCards);
+
+    updateCards();
+  })();
+</script>
+
+</body>
+</html>
