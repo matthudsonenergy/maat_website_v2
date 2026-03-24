@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400">
+  <defs>
+    <radialGradient id="atomGrad" cx="35%" cy="30%" r="70%">
+      <stop offset="0%" stop-color="#f8fcff"/>
+      <stop offset="35%" stop-color="#d9ecff"/>
+      <stop offset="70%" stop-color="#8fb8e8"/>
+      <stop offset="100%" stop-color="#3d5f8f"/>
+    </radialGradient>
+
+    <linearGradient id="bondGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#d7ebff"/>
+      <stop offset="50%" stop-color="#7fa8d8"/>
+      <stop offset="100%" stop-color="#2f4f78"/>
+    </linearGradient>
+
+    <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#10233d" flood-opacity="0.35"/>
+    </filter>
+
+    <filter id="specularBlur" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="1.5"/>
+    </filter>
+  </defs>
+
+  <!-- transparent background -->
+  <g filter="url(#softShadow)">
+    <!-- bond -->
+    <rect x="280" y="172" width="240" height="56" rx="28" fill="url(#bondGrad)"/>
+
+    <!-- left atom -->
+    <circle cx="240" cy="200" r="110" fill="url(#atomGrad)"/>
+    <ellipse cx="205" cy="165" rx="34" ry="24" fill="#ffffff" opacity="0.78" filter="url(#specularBlur)"/>
+    <ellipse cx="275" cy="245" rx="46" ry="28" fill="#1b3353" opacity="0.18"/>
+
+    <!-- right atom -->
+    <circle cx="560" cy="200" r="110" fill="url(#atomGrad)"/>
+    <ellipse cx="525" cy="165" rx="34" ry="24" fill="#ffffff" opacity="0.78" filter="url(#specularBlur)"/>
+    <ellipse cx="595" cy="245" rx="46" ry="28" fill="#1b3353" opacity="0.18"/>
+  </g>
+</svg>
