@@ -289,6 +289,65 @@
       border: 1px solid var(--green-mid);
     }
 
+    /* ---- FIVE PILLARS ---- */
+    .pillars-section {
+      margin-top: 36px;
+    }
+
+    .pillars-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 14px;
+    }
+
+    .pillar-card {
+      background: #fff;
+      border: 1px solid #d4e4de;
+      border-radius: 14px;
+      padding: 20px 18px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .pillar-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #2bb89d, #1a8a6e);
+    }
+
+    .pillar-number {
+      display: inline-flex;
+      width: 30px;
+      height: 30px;
+      align-items: center;
+      justify-content: center;
+      background: #e6f4f1;
+      border-radius: 50%;
+      color: #0e6251;
+      font-weight: 700;
+      font-size: 12px;
+      margin-bottom: 12px;
+    }
+
+    .pillar-card h3 {
+      margin: 0 0 8px;
+      font-size: 16px;
+      line-height: 1.2;
+      color: #0f2b3c;
+      font-weight: 700;
+    }
+
+    .pillar-card p {
+      margin: 0;
+      font-size: 13px;
+      color: #4a6274;
+      line-height: 1.5;
+    }
+
     /* ---- RESPONSIVE ---- */
     @media (max-width: 840px) {
       .flow-grid {
@@ -451,6 +510,40 @@
 
   <!-- Mobile flow labels (hidden on desktop) -->
   <div class="mobile-flow-label" style="display: none;"></div>
+
+  <div class="pillars-section">
+    <div class="pillars-grid">
+      <div class="pillar-card">
+        <div class="pillar-number">01</div>
+        <h3>Ability to Remove Carbon</h3>
+        <p>Carbon utilization infrastructure with a credible carbon removal story tied to feedstocks and deployment context.</p>
+      </div>
+
+      <div class="pillar-card">
+        <div class="pillar-number">02</div>
+        <h3>Products to Cost Target</h3>
+        <p>Commercially flexible product slate with outputs aligned to target economics and downstream demand.</p>
+      </div>
+
+      <div class="pillar-card">
+        <div class="pillar-number">03</div>
+        <h3>Low Capex</h3>
+        <p>Modular deployment, capital efficiency, and a practical path to scale at the point of use.</p>
+      </div>
+
+      <div class="pillar-card">
+        <div class="pillar-number">04</div>
+        <h3>Zero Impedance → Full Power</h3>
+        <p>Electrical architecture as a visible value proposition, not a buried technical footnote.</p>
+      </div>
+
+      <div class="pillar-card">
+        <div class="pillar-number">05</div>
+        <h3>Maximum E-Field Conversion</h3>
+        <p>Electric-field conversion as a core performance differentiator supporting efficient operation.</p>
+      </div>
+    </div>
+  </div>
 </div>
 
 </body>
