@@ -7,7 +7,7 @@
     <script src="https://www.gstatic.com/charts/loader.js"></script>
     <style>
       :root {
-        --bg: #ffffff;
+        --bg: #f6f1e7;
         --panel: #fffaf2;
         --ink: #1f2933;
         --muted: #6b7280;
@@ -21,7 +21,9 @@
         margin: 0;
         font: 14px/1.45 Arial, Helvetica, sans-serif;
         color: var(--ink);
-        background: #ffffff;
+        background:
+          radial-gradient(circle at top left, rgba(199,107,45,0.14), transparent 26%),
+          linear-gradient(180deg, #fbf7f1 0%, var(--bg) 100%);
       }
       .app {
         display: grid;
