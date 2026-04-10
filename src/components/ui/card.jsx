@@ -1,3 +1,5 @@
+import React from "react";
+
 function joinClasses(...values) {
   return values.filter(Boolean).join(" ");
 }

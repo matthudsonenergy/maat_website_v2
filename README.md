@@ -1,57 +1,79 @@
 # MAAT Website Repo
 
-This repo is organized into three working directories:
+This repo publishes the MAAT Energy site to GitHub Pages from the `docs/` directory.
 
-- `docs/`: published GitHub Pages files
-- `in_progress/`: draft and source HTML files
-- `assets/`: shared media assets and source imagery
+## Repo Structure
 
-## Current Structure
+- `maat_energy_investor_onepager.jsx`: source for the React landing page
+- `src/`: minimal React app shell and local UI helpers
+- `docs/`: GitHub Pages output and published static pages
+- `in_progress/`: draft/source HTML working files
+- `assets/`: shared source imagery and media
 
-### `docs/`
+## Published Output
 
-Published pages:
+Files in `docs/` are what GitHub Pages serves at:
 
-- `index.html`: simple landing page for the published site
-- `landfill-gas-opportunity.html`: landfill map page
-- `unified-platform.html`: unified platform page
+- `docs/index.html`: built landing page entry point
+- `docs/assets/`: bundled JS and CSS for the landing page
+- `docs/landfill-gas-opportunity.html`: static published page
+- `docs/unified-platform.html`: static published page
 
-### `in_progress/`
+## Source Files
 
-Working files that are not directly published:
+The landing page is authored in:
 
-- `01_hero_platform_overview.html`
-- `02_five_pillars.html`
-- `03_unified_platform_diagram.html`
-- `03_unified_platform_diagram.html.bak`
-- `04_applications.html`
-- `05_why_it_matters.html`
-- `06_footer_cta.html`
+- `maat_energy_investor_onepager.jsx`
 
-### `assets/`
+The minimal app/runtime files are:
 
-Shared source assets:
+- `index.html`
+- `src/App.jsx`
+- `src/main.jsx`
+- `src/styles.css`
+- `src/components/ui/card.jsx`
+- `src/components/ui/button.jsx`
+- `vite.config.js`
 
-- `hero.png`
-- `CO.svg`
-- `co2.svg`
-- `diatomic_hydrogen.svg`
-- `graphene.svg`
-- `graphene1.svg`
-- `hydrocarbon.svg`
-- `plasma.svg`
-- `syngas.svg`
+## Local Development
+
+1. Install dependencies:
+
+   ```bash
+   npm install
+   ```
+
+2. Start the dev server:
+
+   ```bash
+   npm run dev
+   ```
+
+3. Build the production site into `docs/`:
+
+   ```bash
+   npm run build
+   ```
 
 ## Publish Workflow
 
 1. Update the landing page content in `maat_energy_investor_onepager.jsx`.
-2. Install dependencies with `npm install`.
-3. Build the site with `npm run build`.
-4. Commit the generated `docs/index.html` and `docs/assets/` files.
-5. Publish GitHub Pages from the `docs/` folder.
+2. Run `npm run build`.
+3. Commit the updated files in `docs/index.html` and `docs/assets/`.
+4. Push to the branch GitHub Pages is using.
+
+## GitHub Pages
+
+The Vite build is configured with:
+
+- `base: "/maat_website_v2/"`
+- `outDir: "docs"`
+- `emptyOutDir: false`
+
+That means builds update the landing page output in `docs/` without removing the other published static HTML pages.
 
 ## Notes
 
-- Top-level working content is intentionally limited to `docs/`, `in_progress/`, `assets/`, and this `README.md`.
-- `docs/` is the deploy target and receives the built landing page output.
-- `in_progress/` is the source-of-truth area for drafts and non-published fragments.
+- `docs/` is the deploy target.
+- `in_progress/` remains the working area for non-published draft HTML.
+- If bundled asset filenames in `docs/assets/` change after a build, commit both the new files and the updated `docs/index.html`.
