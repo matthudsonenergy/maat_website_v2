@@ -44,13 +44,14 @@ Shared source assets:
 
 ## Publish Workflow
 
-1. Make edits in `in_progress/` and `assets/`.
-2. Copy finalized pages into `docs/`.
-3. Keep `docs/index.html` as the only page directory/navigation page.
-4. Publish GitHub Pages from the `docs/` folder.
+1. Update the landing page content in `maat_energy_investor_onepager.jsx`.
+2. Install dependencies with `npm install`.
+3. Build the site with `npm run build`.
+4. Commit the generated `docs/index.html` and `docs/assets/` files.
+5. Publish GitHub Pages from the `docs/` folder.
 
 ## Notes
 
 - Top-level working content is intentionally limited to `docs/`, `in_progress/`, `assets/`, and this `README.md`.
-- `docs/` is the deploy target.
+- `docs/` is the deploy target and receives the built landing page output.
 - `in_progress/` is the source-of-truth area for drafts and non-published fragments.
