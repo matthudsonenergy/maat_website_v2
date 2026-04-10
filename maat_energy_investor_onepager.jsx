@@ -1,17 +1,23 @@
-import React from "react";
+import React, { useState } from "react";
 import { motion, useScroll, useSpring } from "framer-motion";
-import { ArrowRight, ChevronDown, MapPin, Mail, Award, FlaskConical, Menu } from "lucide-react";
+import { ArrowRight, ChevronDown, MapPin, Mail, Menu } from "lucide-react";
 import { Card, CardContent } from "./src/components/ui/card.jsx";
 import { Button } from "./src/components/ui/button.jsx";
+import maatLogo from "./docs/assets/Maat_logo.png";
+import teamBackground from "./docs/assets/Team.png";
+import demoProjectImage from "./docs/assets/unnamed (8).jpg";
+import foakProjectImage from "./docs/assets/FOAK_CO.png";
+import noakProjectImage from "./docs/assets/09003c75-8be8-4227-a88e-eadb778a74e4.png";
+import partnersImage from "./docs/assets/partners.png";
+import sbirSttrImage from "./docs/assets/sbirsttr.png";
+import reactorMainImage from "./docs/assets/reactor_main.png";
 
 const navItems = [
   { label: "Overview", href: "#overview" },
   { label: "Technology", href: "#technology" },
-  { label: "Reactor", href: "#reactor" },
   { label: "Projects", href: "#projects" },
   { label: "Partners", href: "#partners" },
   { label: "Team", href: "#team" },
-  { label: "Funding", href: "#funding" },
   { label: "Contact", href: "#contact" },
 ];
 
@@ -81,406 +87,111 @@ const exactCopy = {
   location: "Cambridge, MA, USA",
 };
 
+const projectTabs = [
+  {
+    key: "demonstration",
+    label: "Demonstration",
+    image: demoProjectImage,
+    title: "Industrial Demonstration Site",
+    subtitle: "Lab-to-Field validation on a relevant oil & gas site",
+    body: "Demonstrating commercial-scale operation for extended durations using real-world feedstocks.",
+    applications: [
+      {
+        title: "Carbon Materials for Asphalt",
+        text: "MAAT Energy Carbons improve the physical properties of asphalt while removing a burdensome step in the production process",
+      },
+      {
+        title: "Carbon Monoxide for Metal Heating",
+        text: "Low-cost carbon monoxide produced on-site for furnace atmospheres for metal treating applications",
+      },
+    ],
+  },
+  {
+    key: "foak",
+    label: "First-of-a-Kind",
+    image: foakProjectImage,
+    title: "First-of-a-Kind",
+    subtitle: "Early commercial applications that demonstrate MAAT's modular plasma platform in real industrial settings.",
+    body: "First-of-a-kind deployment focuses on revenue-generating applications where distributed production, product quality, and customer-side economics can be proven in the field.",
+    applications: [
+      {
+        title: "Performance Asphalt",
+        text: "Engineered carbon that improves asphalt performance while reducing the delivered-cost penalty of centralized materials. Tuned morphology and particle size support workable binders, rutting resistance, and more efficient formulation.",
+      },
+      {
+        title: "Reliable CO Supply",
+        text: "On-site, high-purity carbon monoxide for customers that want to avoid the cost and complexity of transporting specialty gases. Distributed production helps reduce logistics burden while improving supply reliability.",
+      },
+    ],
+  },
+  {
+    key: "noak",
+    label: "Nth-of-a-Kind",
+    image: noakProjectImage,
+    title: "CO2 Fuels",
+    subtitle: "Distributed methanol production, enabled by modular syngas generation at the point of demand",
+    body: "MAAT's platform is designed to turn low-value carbon feedstocks into a practical pathway for cleaner, more capital-efficient fuel and chemical production.",
+    applications: [
+      {
+        title: "Methanol",
+        text: "Distributed methanol production, enabled by modular syngas generation at the point of demand.",
+      },
+      {
+        title: "Sustainable Aviation Fuel (SAF)",
+        text: "A distributed pathway to SAF, built on flexible syngas production and modular deployment. By upgrading carbon-based feedstocks closer to where they are available and needed, MAAT supports a more efficient route to lower-emissions aviation fuel.",
+      },
+    ],
+  },
+];
+
+function createPlaceholderImage(title, subtitle, accent = "#111827") {
+  const svg = `
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" role="img" aria-label="${title}">
+      <defs>
+        <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#fbf7f1" />
+          <stop offset="100%" stop-color="#e9dfce" />
+        </linearGradient>
+      </defs>
+      <rect width="1200" height="900" rx="48" fill="url(#bg)" />
+      <rect x="56" y="56" width="1088" height="788" rx="36" fill="#fffdfa" stroke="rgba(17,24,39,0.14)" />
+      <circle cx="936" cy="244" r="142" fill="${accent}" opacity="0.08" />
+      <circle cx="232" cy="696" r="164" fill="${accent}" opacity="0.08" />
+      <path d="M156 588C271 445 386 373 501 373C651 373 743 539 887 539C961 539 1037 506 1116 438" fill="none" stroke="${accent}" stroke-width="16" stroke-linecap="round" opacity="0.18" />
+      <rect x="140" y="168" width="168" height="28" rx="14" fill="${accent}" opacity="0.16" />
+      <text x="140" y="334" fill="#111827" font-family="Montserrat, Arial, sans-serif" font-size="74" font-weight="700">${title}</text>
+      <text x="140" y="402" fill="#5a6472" font-family="Roboto, Arial, sans-serif" font-size="30">${subtitle}</text>
+      <text x="140" y="688" fill="#111827" font-family="PT Mono, monospace" font-size="24" letter-spacing="6">IMAGE PLACEHOLDER</text>
+    </svg>
+  `;
+
+  return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
+}
+
 const heroImage =
-  "https://lh3.googleusercontent.com/sitesv/APaQ0SRGbXHGzOl-5aqcX57uLfFoLd4wTHnBLAp7r_JdW1SZgG5dDnPo1A8_HD7XLLavK25H63nC7qGw386u8ytuNwmAOnuEaaSgXZD0B-YCyae5r-CpA08-oi_T-mC6PAZr4ZldHHP5Q51f0TyCHHsw8pOp96DxRAbc-yCB4_gTRh8TZTWh71RgokkP=w16383";
+  "https://d9-wret.s3.us-west-2.amazonaws.com/assets/palladium/production/s3fs-public/styles/teaser/public/media/images/Oceanwaves.gif?itok=LC7cKGuQ";
 
-const backgroundTexture =
-  "https://lh3.googleusercontent.com/sitesv/APaQ0ST65olKrux8-RT1KreiXQZB8KMeYgIaJ2KGBLxgSNrEUFs2uGORCRgyXTVwbqBTFHI4AzXxN8bTnm5OhwDqoSP0SIA10HGbM3ZEau54t3DEDQ7jcOePLGpZZWbOADbAnEmRQwRkPmJuCdR-6N51XtihGGpLw2NemPiMpv1x7RxvNjy_PPkrKltA2SnWjav_8QBlqD3THrUPPjKtbS_oNQ1XjoOsuOWzz0g9Zvo=w1280";
+const reactorImage = reactorMainImage;
 
-const reactorImage =
-  "https://lh3.googleusercontent.com/sitesv/APaQ0SSzpE-xDiBVyNn8T-DxQW-xP33dUMVTqxNBcHc_WlHelWs9GgZ-SPhN8h2RvwAw7PPxfjHdovPqlnQ58tgoBgmtb6NYTFw3AzysI5HNxDXHyMY57ewAvP72JOVmGEkTNka7BXFIDjqcjzbyGrjRs2VqWsPTQua3THz48v1mILe_wdu58gyIaTW_ATE=w16383";
-
-const moleculeImage =
-  "https://lh3.googleusercontent.com/sitesv/APaQ0STQ38yu66lkDNJ8nSBz9K9RXtIflWOWxaCrso4ufXkBCRRBoq73OgLUvJRBralXiCfalJB_wI8bdEQTy0QkolzLc-oOsYPhuHZaH-7bKaGv-_etFa-aqk77sXlzAT-H8oqSp_WIUSLO-QXS-yAbFyqYFV3e0I8uvXvPARsAySCWJUY4vT1M4LfWiw1kh8A1UieYP6KAMK-GkRqHhFM6UFotvsVm-Gs1a_PAMyc=w1280";
-
-const unifiedPlatformEmbed = String.raw`<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MAAT Energy – Unified Platform</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,600;0,9..40,700;1,9..40,400&family=Instrument+Serif&display=swap" rel="stylesheet" />
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; }
-    :root {
-      --green: #0f7a62;
-      --green-light: #e4f5ef;
-      --green-mid: #c0e6d8;
-      --navy: #12364b;
-      --navy-light: #e3eef6;
-      --navy-mid: #b7d0e4;
-      --ink: #0f2b3c;
-      --body: #4a6272;
-      --surface: #f6faf8;
-      --card: #ffffff;
-      --border: #d4e3dd;
-      --radius: 14px;
-      --glow: 0 8px 30px rgba(15, 60, 50, 0.1);
-    }
-    body {
-      font-family: 'DM Sans', system-ui, sans-serif;
-      color: var(--ink);
-      line-height: 1.5;
-      background: #fff;
-    }
-    #maat-diagram {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 48px 20px 56px;
-    }
-    .diagram-header {
-      text-align: center;
-      margin-bottom: 36px;
-    }
-    .diagram-header h2 {
-      font-family: 'Instrument Serif', Georgia, serif;
-      font-size: clamp(30px, 5vw, 48px);
-      font-weight: 400;
-      letter-spacing: -0.02em;
-      line-height: 1.1;
-      color: var(--ink);
-      margin-bottom: 12px;
-    }
-    .diagram-header p {
-      max-width: 56ch;
-      margin: 0 auto;
-      font-size: 15px;
-      color: var(--body);
-    }
-    .flow-grid {
-      display: grid;
-      grid-template-columns: 1fr auto 1fr;
-      gap: 0;
-      align-items: stretch;
-    }
-    .col-header {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      margin-bottom: 16px;
-      font-size: 14px;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-    }
-    .col-header.inputs { color: var(--green); }
-    .col-header.outputs { color: var(--navy); justify-content: flex-end; text-align: right; }
-    .col-header::before {
-      content: '';
-      width: 18px;
-      height: 2px;
-      border-radius: 2px;
-    }
-    .col-header.inputs::before { background: var(--green); }
-    .col-header.outputs::before { background: var(--navy); order: 1; }
-    .flow-column {
-      display: flex;
-      flex-direction: column;
-      height: 100%;
-    }
-    .card-stack {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      flex: 1;
-    }
-    .inputs-col .card-stack { justify-content: center; }
-    .flow-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 16px 18px;
-      cursor: default;
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      column-gap: 12px;
-      transition: transform .18s, box-shadow .18s, border-color .18s, opacity .18s;
-    }
-    .flow-card:hover {
-      transform: translateY(-3px);
-      box-shadow: var(--glow);
-    }
-    .card-icon {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 36px;
-      height: 36px;
-      border-radius: 10px;
-      margin-bottom: 0;
-      font-size: 18px;
-      line-height: 1;
-      flex: 0 0 36px;
-    }
-    .input .card-icon { background: var(--green-light); }
-    .output .card-icon { background: var(--navy-light); }
-    .card-title {
-      font-size: 15px;
-      font-weight: 700;
-      line-height: 1.25;
-      color: var(--ink);
-      margin-bottom: 0;
-      flex: 1 1 0;
-      transition: font-size .18s ease, line-height .18s ease, color .18s ease;
-    }
-    .card-desc {
-      font-size: 13px;
-      color: var(--body);
-      line-height: 1.45;
-      flex-basis: 100%;
-      max-height: 0;
-      opacity: 0;
-      overflow: hidden;
-      margin-top: 0;
-      padding-left: 48px;
-      transition: max-height .18s ease, opacity .18s ease, margin-top .18s ease;
-    }
-    .flow-card:hover .card-desc {
-      max-height: 120px;
-      opacity: 1;
-      margin-top: 6px;
-    }
-    .flow-card:hover .card-title {
-      font-size: 18px;
-      line-height: 1.2;
-      color: var(--ink);
-    }
-    .center-col {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 0 16px;
-      min-width: 220px;
-    }
-    .flow-arrows {
-      display: flex;
-      align-items: center;
-      gap: 0;
-      margin-bottom: 14px;
-    }
-    .arrow-line {
-      width: 40px;
-      height: 2px;
-      border-radius: 2px;
-    }
-    .arrow-line.in { background: linear-gradient(90deg, var(--green-mid), var(--green)); }
-    .arrow-line.out { background: linear-gradient(90deg, var(--navy), var(--navy-mid)); }
-    .arrow-head {
-      font-size: 13px;
-      line-height: 1;
-    }
-    .arrow-head.in { color: var(--green); }
-    .arrow-head.out { color: var(--navy); }
-    .platform-hub { text-align: center; }
-    .orb {
-      width: 160px;
-      height: 160px;
-      margin: 0 auto 16px;
-      border-radius: 999px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: radial-gradient(circle at 30% 30%, #2bb89d, #12364b 70%);
-      color: white;
-      text-align: center;
-      padding: 20px;
-      box-shadow: 0 20px 50px rgba(18, 54, 75, 0.22);
-      transition: transform .2s;
-    }
-    .orb:hover { transform: scale(1.04); }
-    .orb span {
-      font-size: 18px;
-      line-height: 1.15;
-      font-weight: 700;
-      letter-spacing: -0.01em;
-    }
-    .platform-sub {
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--ink);
-      margin-bottom: 4px;
-    }
-    .platform-desc {
-      font-size: 12px;
-      color: var(--body);
-      max-width: 200px;
-      margin: 0 auto 0px;
-    }
-    .pill-row {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 5px;
-      max-width: 220px;
-      margin: 10px auto 0;
-    }
-    .pill {
-      font-size: 10px;
-      font-weight: 700;
-      padding: 4px 9px;
-      border-radius: 999px;
-      background: var(--green-light);
-      color: #0a5e4b;
-      border: 1px solid var(--green-mid);
-    }
-    .pillars-section { margin-top: 36px; }
-    .pillars-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-      gap: 14px;
-    }
-    .pillar-card {
-      background: #fff;
-      border: 1px solid #d4e4de;
-      border-radius: 14px;
-      padding: 20px 18px;
-      position: relative;
-      overflow: hidden;
-    }
-    .pillar-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 3px;
-      background: linear-gradient(90deg, #2bb89d, #1a8a6e);
-    }
-    .pillar-number {
-      display: inline-flex;
-      width: 30px;
-      height: 30px;
-      align-items: center;
-      justify-content: center;
-      background: #e6f4f1;
-      border-radius: 50%;
-      color: #0e6251;
-      font-weight: 700;
-      font-size: 12px;
-      margin-bottom: 12px;
-    }
-    .pillar-card h3 {
-      margin: 0 0 8px;
-      font-size: 16px;
-      line-height: 1.2;
-      color: #0f2b3c;
-      font-weight: 700;
-    }
-    .pillar-card p {
-      margin: 0;
-      font-size: 13px;
-      color: #4a6274;
-      line-height: 1.5;
-    }
-    @media (max-width: 840px) {
-      .flow-grid { grid-template-columns: 1fr; gap: 20px; }
-      .center-col { order: -1; padding: 0; min-width: unset; }
-      .flow-arrows { display: none; }
-      .col-header.outputs { justify-content: flex-start; }
-      .col-header.outputs::before { order: 0; }
-      .mobile-flow-label {
-        display: block;
-        text-align: center;
-        font-size: 11px;
-        font-weight: 700;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        color: var(--body);
-        padding: 8px 0;
-      }
-      .mobile-flow-label::before {
-        content: '↓';
-        display: block;
-        font-size: 16px;
-        margin-bottom: 2px;
-      }
-    }
-    @media (min-width: 841px) { .mobile-flow-label { display: none; } }
-    @media (prefers-reduced-motion: no-preference) {
-      .flow-card { animation: cardIn .4s ease both; }
-      .flow-card:nth-child(1) { animation-delay: .05s; }
-      .flow-card:nth-child(2) { animation-delay: .1s; }
-      .flow-card:nth-child(3) { animation-delay: .15s; }
-      .flow-card:nth-child(4) { animation-delay: .2s; }
-      @keyframes cardIn {
-        from { opacity: 0; transform: translateY(12px); }
-        to { opacity: 1; transform: translateY(0); }
-      }
-    }
-  </style>
-</head>
-<body>
-<div id="maat-diagram">
-  <div class="diagram-header"></div>
-  <div class="flow-grid">
-    <div class="flow-column inputs-col">
-      <div class="col-header inputs">Inputs</div>
-      <div class="card-stack">
-        <article class="flow-card input"><div class="card-icon">CO₂</div><div class="card-title">CO₂</div></article>
-        <article class="flow-card input"><div class="card-icon">CH₄</div><div class="card-title">Methane-rich feedstocks</div></article>
-        <article class="flow-card input"><div class="card-icon">C₃</div><div class="card-title">Propane and butane</div></article>
-      </div>
-    </div>
-    <div class="center-col">
-      <div class="flow-arrows"><div class="arrow-line in"></div><div class="arrow-head in">▶</div><div style="width:12px"></div><div class="arrow-head out">▶</div><div class="arrow-line out"></div></div>
-      <div class="platform-hub">
-        <div class="orb"><span>Unified<br>Platform</span></div>
-        <div class="platform-sub">Microwave Plasma Platform</div>
-        <div class="platform-desc">Flexible feedstocks enter the platform, then branch into product pathways based on application and economics.</div>
-        <div class="pill-row">
-          <span class="pill">Modular</span>
-          <span class="pill">Distributed</span>
-          <span class="pill">Point-of-use</span>
-        </div>
-      </div>
-    </div>
-    <div class="mobile-flow-label">Outputs</div>
-    <div class="flow-column outputs-col">
-      <div class="col-header outputs">Outputs</div>
-      <div class="card-stack">
-        <article class="flow-card output"><div class="card-icon">H₂</div><div class="card-title">Hydrogen</div></article>
-        <article class="flow-card output"><div class="card-icon">CO</div><div class="card-title">Carbon monoxide</div></article>
-        <article class="flow-card output"><div class="card-icon">C</div><div class="card-title">Carbon materials</div></article>
-      </div>
-    </div>
-  </div>
-  <div class="pillars-section">
-    <div class="pillars-grid">
-      <article class="pillar-card"><div class="pillar-number">01</div><h3>Distributed production</h3><p>Modular deployment at the point of demand supports capital-efficient rollout and localized supply of industrial molecules and carbon materials.</p></article>
-      <article class="pillar-card"><div class="pillar-number">02</div><h3>Flexible feedstocks</h3><p>The platform is built around methane pyrolysis and CO₂ reforming, with inputs spanning biogas, landfill gas, coal bed methane, natural gas, propane, and butane.</p></article>
-      <article class="pillar-card"><div class="pillar-number">03</div><h3>Multiple outputs</h3><p>Hydrogen, carbon monoxide, and valuable carbon products create a broader monetization base than a single-product process architecture.</p></article>
-      <article class="pillar-card"><div class="pillar-number">04</div><h3>Designed for intermittent power</h3><p>Fast startup and operation on intermittent electricity increase siting flexibility and improve alignment with lower-cost energy availability.</p></article>
-      <article class="pillar-card"><div class="pillar-number">05</div><h3>Industrial pathways</h3><p>The same platform can support industrial carbon monoxide, construction materials, methanol, plastics, sustainable aviation fuel, and advanced materials.</p></article>
-    </div>
-  </div>
-</div>
-</body>
-</html>`;
+const unifiedPlatformEmbed = "./docs/unified-platform.html";
 
 function SectionHeading({ eyebrow, title, description }) {
   return (
     <div className="max-w-3xl space-y-4">
-      <div className="text-xs font-semibold uppercase tracking-[0.24em] text-emerald-300/90">
-        {eyebrow}
-      </div>
-      <h2 className="text-3xl font-semibold tracking-tight text-white md:text-5xl">
+      <h2 className="font-[family-name:var(--font-display)] text-3xl font-semibold tracking-[-0.04em] text-[color:var(--color-paper-ink)] md:text-5xl">
         {title}
       </h2>
-      {description ? <p className="text-base leading-7 text-white/70 md:text-lg">{description}</p> : null}
+      {description ? <p className="text-base leading-7 text-[color:var(--color-paper-muted)] md:text-lg">{description}</p> : null}
     </div>
   );
 }
 
 function Metric({ value, label }) {
   return (
-    <Card className="border-white/10 bg-white/5 backdrop-blur-xl">
+    <Card className="bg-[color:var(--color-paper-surface-strong)]">
       <CardContent className="p-6">
-        <div className="text-3xl font-semibold text-white md:text-4xl">{value}</div>
-        <div className="mt-2 text-sm uppercase tracking-[0.18em] text-white/55">{label}</div>
+        <div className="font-[family-name:var(--font-display)] text-3xl font-semibold text-[color:var(--color-paper-ink)] md:text-4xl">{value}</div>
+        <div className="mt-2 font-mono text-sm uppercase tracking-[0.18em] text-[color:var(--color-paper-muted)]">{label}</div>
       </CardContent>
     </Card>
   );
@@ -489,13 +200,13 @@ function Metric({ value, label }) {
 function ValueCard({ icon: Icon, title, text }) {
   return (
     <motion.div whileHover={{ y: -4 }} transition={{ duration: 0.2 }}>
-      <Card className="h-full border-white/10 bg-white/5 backdrop-blur-xl">
+      <Card className="h-full bg-[color:var(--color-paper-surface-strong)]">
         <CardContent className="p-6 md:p-7">
-          <div className="mb-5 inline-flex rounded-2xl border border-emerald-300/20 bg-emerald-300/10 p-3 text-emerald-200">
+          <div className="mb-5 inline-flex rounded-2xl border border-[color:var(--color-paper-border)] bg-[color:var(--color-paper-highlight)] p-3 text-[color:var(--color-paper-ink)]">
             <Icon className="h-5 w-5" />
           </div>
-          <h3 className="text-lg font-medium text-white">{title}</h3>
-          <p className="mt-3 text-sm leading-7 text-white/70">{text}</p>
+          <h3 className="font-[family-name:var(--font-display)] text-lg font-medium text-[color:var(--color-paper-ink)]">{title}</h3>
+          <p className="mt-3 text-sm leading-7 text-[color:var(--color-paper-muted)]">{text}</p>
         </CardContent>
       </Card>
     </motion.div>
@@ -504,11 +215,11 @@ function ValueCard({ icon: Icon, title, text }) {
 
 function PersonCard({ name, role, bio }) {
   return (
-    <Card className="h-full border-white/10 bg-white/5 backdrop-blur-xl">
+    <Card className="h-full bg-[color:var(--color-paper-surface-strong)]">
       <CardContent className="p-6 md:p-7">
-        <div className="text-lg font-medium text-white">{name}</div>
-        <div className="mt-2 text-sm uppercase tracking-[0.18em] text-emerald-300">{role}</div>
-        <p className="mt-4 text-sm leading-7 text-white/72">{bio}</p>
+        <div className="font-[family-name:var(--font-display)] text-lg font-medium text-[color:var(--color-paper-ink)]">{name}</div>
+        <div className="mt-2 font-mono text-sm uppercase tracking-[0.18em] text-[color:var(--color-paper-muted)]">{role}</div>
+        <p className="mt-4 text-sm leading-7 text-[color:var(--color-paper-muted)]">{bio}</p>
       </CardContent>
     </Card>
   );
@@ -516,7 +227,7 @@ function PersonCard({ name, role, bio }) {
 
 function BulletPill({ children }) {
   return (
-    <div className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-white/78 backdrop-blur-xl">
+    <div className="rounded-full border border-[color:var(--color-paper-border)] bg-[color:var(--color-paper-surface)] px-4 py-2 text-sm text-[color:var(--color-paper-ink)]">
       {children}
     </div>
   );
@@ -526,8 +237,8 @@ function HtmlEmbed({ html, title, height = 980 }) {
   return (
     <iframe
       title={title}
-      srcDoc={html}
-      className="w-full rounded-[2rem] border border-white/10 bg-white shadow-2xl shadow-black/20"
+      src={html}
+      className="w-full rounded-[2rem] border border-[color:var(--color-paper-border)] bg-white shadow-[0_24px_70px_rgba(68,55,35,0.12)]"
       style={{ height }}
     />
   );
@@ -536,35 +247,31 @@ function HtmlEmbed({ html, title, height = 980 }) {
 export default function MaatEnergyInvestorOnePager() {
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, { stiffness: 120, damping: 30, restDelta: 0.001 });
+  const [activeProject, setActiveProject] = useState(projectTabs[0]);
 
 
   return (
-    <div className="min-h-screen bg-[#07111a] text-white">
-      <motion.div style={{ scaleX }} className="fixed left-0 right-0 top-0 z-50 h-1 origin-left bg-emerald-300" />
+    <div className="min-h-screen text-[color:var(--color-paper-ink)]">
+      <motion.div style={{ scaleX }} className="fixed left-0 right-0 top-0 z-50 h-1 origin-left bg-[color:var(--color-paper-accent)]" />
 
-      <div className="fixed inset-0 -z-10 bg-[radial-gradient(circle_at_top,rgba(16,185,129,0.16),transparent_32%),radial-gradient(circle_at_80%_20%,rgba(59,130,246,0.14),transparent_28%),linear-gradient(180deg,#07111a_0%,#08131f_35%,#07111a_100%)]" />
-      <div
-        className="fixed inset-0 -z-10 opacity-[0.07] mix-blend-screen"
-        style={{ backgroundImage: `url(${backgroundTexture})`, backgroundSize: "cover", backgroundPosition: "center" }}
-      />
+      <div className="fixed inset-0 -z-10 bg-[radial-gradient(circle_at_top,rgba(232,222,203,0.76),transparent_34%),radial-gradient(circle_at_80%_16%,rgba(17,24,39,0.06),transparent_26%),linear-gradient(180deg,#fbf7f1_0%,#f2ece1_40%,#efe7db_100%)]" />
 
-      <header className="sticky top-0 z-40 border-b border-white/10 bg-[#07111a]/70 backdrop-blur-2xl">
+      <header className="sticky top-0 z-40 border-b border-[color:var(--color-paper-border)] bg-[#f7f1e7]/86 backdrop-blur-2xl">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:px-8">
-          <div>
-            <div className="text-sm font-semibold uppercase tracking-[0.24em] text-emerald-300">MAAT Energy</div>
-            <div className="text-xs text-white/55">Investor Overview</div>
-          </div>
+          <a href="#overview" className="flex items-center">
+            <img src={maatLogo} alt="MAAT Energy" className="h-11 w-auto object-contain md:h-12" />
+          </a>
           <nav className="hidden items-center gap-6 md:flex">
             {navItems.map((item) => (
-              <a key={item.href} href={item.href} className="text-sm text-white/70 transition hover:text-white">
+              <a key={item.href} href={item.href} className="text-sm text-[color:var(--color-paper-muted)] transition hover:text-[color:var(--color-paper-ink)]">
                 {item.label}
               </a>
             ))}
           </nav>
-          <Button asChild className="hidden rounded-full bg-white text-slate-900 hover:bg-white/90 md:inline-flex">
+          <Button asChild className="hidden md:inline-flex">
             <a href="#contact">Contact</a>
           </Button>
-          <button className="inline-flex rounded-full border border-white/10 p-2 text-white/80 md:hidden" aria-label="Navigation">
+          <button className="inline-flex rounded-full border border-[color:var(--color-paper-border)] bg-[color:var(--color-paper-surface)] p-2 text-[color:var(--color-paper-ink)] md:hidden" aria-label="Navigation">
             <Menu className="h-5 w-5" />
           </button>
         </div>
@@ -572,33 +279,34 @@ export default function MaatEnergyInvestorOnePager() {
 
       <main>
         <section id="overview" className="relative overflow-hidden">
+          <img src={heroImage} alt="" aria-hidden="true" className="absolute inset-0 h-full w-full object-cover opacity-70" />
+          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(251,247,241,0.32),rgba(242,236,225,0.24)_45%,rgba(239,231,219,0.36))]" />
+          <div className="absolute -left-20 top-10 h-64 w-64 rounded-full bg-[rgba(232,222,203,0.24)] blur-3xl" />
+          <div className="absolute -right-24 top-20 h-72 w-72 rounded-full bg-[rgba(17,24,39,0.04)] blur-3xl" />
           <div className="mx-auto grid max-w-7xl gap-12 px-6 pb-24 pt-16 lg:grid-cols-[1.15fr_0.85fr] lg:px-8 lg:pb-28 lg:pt-24">
             <div className="flex flex-col justify-center">
               <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-                <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-emerald-300/20 bg-emerald-300/10 px-4 py-2 text-xs font-medium uppercase tracking-[0.2em] text-emerald-200">
-                  <FlaskConical className="h-4 w-4" />
-                  Carbon conversion platform
+                <div className="relative">
+                  <h1 className="max-w-4xl font-[family-name:var(--font-display)] text-5xl font-semibold tracking-[-0.05em] text-[color:var(--color-paper-ink)] md:text-7xl md:leading-[0.98]">
+                    {exactCopy.heroTitle}
+                  </h1>
+                  <p className="mt-6 max-w-2xl text-xl text-[rgba(17,24,39,0.78)] md:text-2xl">{exactCopy.heroSubtitle}</p>
                 </div>
-                <h1 className="max-w-4xl text-5xl font-semibold tracking-tight text-white md:text-7xl md:leading-[1.02]">
-                  {exactCopy.heroTitle}
-                </h1>
-                <p className="mt-6 max-w-2xl text-xl text-white/75 md:text-2xl">{exactCopy.heroSubtitle}</p>
-                <p className="mt-8 max-w-3xl text-base leading-8 text-white/72 md:text-lg">{exactCopy.intro}</p>
               </motion.div>
 
               <motion.div
                 initial={{ opacity: 0, y: 18 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.15 }}
-                className="mt-10 flex flex-wrap gap-4"
+                className="relative z-10 mt-10 flex flex-wrap gap-4"
               >
-                <Button asChild size="lg" className="rounded-full bg-emerald-300 px-6 text-slate-950 hover:bg-emerald-200">
+                <Button asChild size="lg" className="px-6">
                   <a href="#technology">
                     Explore platform
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </a>
                 </Button>
-                <Button asChild size="lg" variant="outline" className="rounded-full border-white/15 bg-white/5 px-6 text-white hover:bg-white/10">
+                <Button asChild size="lg" variant="outline" className="px-6">
                   <a href="#funding">View support</a>
                 </Button>
               </motion.div>
@@ -614,24 +322,21 @@ export default function MaatEnergyInvestorOnePager() {
               initial={{ opacity: 0, scale: 0.98 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.7, delay: 0.1 }}
-              className="relative flex items-center justify-center"
+              className="relative flex items-center justify-center lg:justify-end"
             >
-              <div className="absolute -inset-10 rounded-full bg-emerald-300/10 blur-3xl" />
-              <div className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-white/5 p-3 shadow-2xl shadow-black/30 backdrop-blur-xl">
-                <img src={heroImage} alt="MAAT Energy technology" className="h-[560px] w-full rounded-[1.4rem] object-cover lg:w-[520px]" />
-                <div className="absolute inset-x-6 bottom-6 rounded-3xl border border-white/10 bg-[#07111a]/70 p-5 backdrop-blur-xl">
-                  <div className="text-xs uppercase tracking-[0.22em] text-emerald-300">Platform thesis</div>
-                  <div className="mt-2 text-lg font-medium text-white">Distributed carbon upgrading at the point of use</div>
-                  <div className="mt-2 text-sm leading-6 text-white/70">
-                    Built for fuels, chemicals, and materials with modular deployment, feedstock flexibility, and industrial product optionality.
-                  </div>
+              <div className="absolute -inset-10 rounded-full bg-[color:var(--color-paper-highlight)] blur-3xl opacity-70" />
+              <div className="relative w-full max-w-[560px]">
+                <div className="rounded-[2rem] border border-[rgba(255,255,255,0.72)] bg-[rgba(248,243,235,0.84)] p-6 shadow-[0_24px_80px_rgba(68,55,35,0.14)] backdrop-blur-sm md:p-8">
+                  <p className="text-sm leading-7 text-[color:var(--color-paper-muted)] md:text-base md:leading-8">
+                    {exactCopy.intro}
+                  </p>
                 </div>
               </div>
             </motion.div>
           </div>
 
           <div className="flex justify-center pb-8">
-            <a href="#technology" className="inline-flex items-center gap-2 text-sm text-white/55 transition hover:text-white/80">
+            <a href="#technology" className="inline-flex items-center gap-2 text-sm text-[color:var(--color-paper-muted)] transition hover:text-[color:var(--color-paper-ink)]">
               Scroll
               <ChevronDown className="h-4 w-4" />
             </a>
@@ -644,33 +349,31 @@ export default function MaatEnergyInvestorOnePager() {
               <SectionHeading
                 eyebrow="Technology"
                 title="A modular platform for clean industrial molecules and carbon materials"
-                description="The section below preserves the original site language while reframing it for a clearer investor narrative."
+                description="MAAT Energy combines flexible feedstocks, distributed deployment, and tunable chemistry to serve a wide range of industrial applications."
               />
-              <Card className="border-white/10 bg-white/5 backdrop-blur-xl">
+              <Card className="bg-[color:var(--color-paper-surface-strong)]">
                 <CardContent className="p-7 md:p-8">
-                  <p className="text-base leading-8 text-white/78 md:text-lg">{exactCopy.technology}</p>
+                  <p className="text-base leading-8 text-[color:var(--color-paper-muted)] md:text-lg">{exactCopy.technology}</p>
                 </CardContent>
               </Card>
             </div>
             <div className="grid gap-6">
-              <div className="overflow-hidden rounded-[2rem] border border-white/10 bg-white/5 p-3 backdrop-blur-xl">
+              <div className="overflow-hidden rounded-[2rem] border border-[color:var(--color-paper-border)] bg-[color:var(--color-paper-surface-strong)] p-3 shadow-[0_24px_60px_rgba(68,55,35,0.12)]">
                 <img src={reactorImage} alt="Reactor platform" className="h-[360px] w-full rounded-[1.5rem] object-cover" />
               </div>
               <div className="grid gap-6 md:grid-cols-2">
-                <Card className="border-white/10 bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl">
+                <Card className="bg-[linear-gradient(180deg,rgba(255,255,255,0.95),rgba(244,238,228,0.92))]">
                   <CardContent className="p-6">
-                    <div className="mb-3 text-xs uppercase tracking-[0.22em] text-emerald-300">Pathway 01</div>
-                    <div className="text-xl font-medium text-white">Methane pyrolysis</div>
-                    <p className="mt-3 text-sm leading-7 text-white/70">
+                    <div className="font-[family-name:var(--font-display)] text-xl font-medium text-[color:var(--color-paper-ink)]">Methane pyrolysis</div>
+                    <p className="mt-3 text-sm leading-7 text-[color:var(--color-paper-muted)]">
                       Tunable operation supports hydrogen and carbon production from methane-rich streams and related gaseous hydrocarbons.
                     </p>
                   </CardContent>
                 </Card>
-                <Card className="border-white/10 bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl">
+                <Card className="bg-[linear-gradient(180deg,rgba(255,255,255,0.95),rgba(244,238,228,0.92))]">
                   <CardContent className="p-6">
-                    <div className="mb-3 text-xs uppercase tracking-[0.22em] text-sky-300">Pathway 02</div>
-                    <div className="text-xl font-medium text-white">CO₂ reforming</div>
-                    <p className="mt-3 text-sm leading-7 text-white/70">
+                    <div className="font-[family-name:var(--font-display)] text-xl font-medium text-[color:var(--color-paper-ink)]">CO₂ reforming</div>
+                    <p className="mt-3 text-sm leading-7 text-[color:var(--color-paper-muted)]">
                       Carbon dioxide and carbonaceous inputs are converted into industrial intermediates for chemicals, fuels, and materials.
                     </p>
                   </CardContent>
@@ -680,11 +383,10 @@ export default function MaatEnergyInvestorOnePager() {
           </div>
         </section>
 
-        <section id="platform" className="border-y border-white/10 bg-white/[0.03]">
+        <section id="platform" className="border-y border-[color:var(--color-paper-border)] bg-[rgba(255,255,255,0.24)]">
           <div className="mx-auto max-w-7xl px-6 py-24 lg:px-8">
             <SectionHeading
-              eyebrow="Platform"
-              title="Unified platform"
+              title="Modern Conversion: Microwave Plasma Platform"
               description={exactCopy.commercialization}
             />
 
@@ -694,101 +396,146 @@ export default function MaatEnergyInvestorOnePager() {
           </div>
         </section>
 
-        <section id="reactor" className="mx-auto max-w-7xl px-6 py-24 lg:px-8">
-          <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
-            <SectionHeading
-              eyebrow="Reactor Technology"
-              title={exactCopy.reactorTitle}
-              description={exactCopy.reactorSubtitle}
-            />
-            <Card className="border-white/10 bg-white/5 backdrop-blur-xl">
-              <CardContent className="p-7 md:p-8">
-                <div className="text-xs uppercase tracking-[0.22em] text-white/50">Original page wording</div>
-                <div className="mt-4 text-3xl font-semibold text-white md:text-4xl">{exactCopy.reactorTitle}</div>
-                <div className="mt-3 text-lg text-white/75">{exactCopy.reactorSubtitle}</div>
-                <p className="mt-6 text-sm leading-7 text-white/65">
-                  The uploaded archive for this page is minimal in text, so this section preserves the exact wording currently recoverable from the source while presenting it in a stronger product frame.
-                </p>
-              </CardContent>
-            </Card>
-          </div>
-        </section>
-
-        <section id="projects" className="border-y border-white/10 bg-white/[0.03]">
+        <section id="projects" className="border-y border-[color:var(--color-paper-border)] bg-[rgba(255,255,255,0.2)]">
           <div className="mx-auto max-w-7xl px-6 py-24 lg:px-8">
             <SectionHeading
-              eyebrow="Projects"
               title="Path to deployment"
-              description="The Projects page provides the staged commercialization structure below."
             />
             <div className="mt-12 grid gap-6 md:grid-cols-3">
-              {exactCopy.projects.map((item, index) => (
-                <Card key={item} className="border-white/10 bg-white/5 backdrop-blur-xl">
-                  <CardContent className="p-7">
-                    <div className="text-xs uppercase tracking-[0.22em] text-white/45">Stage 0{index + 1}</div>
-                    <div className="mt-3 text-2xl font-semibold text-white">{item}</div>
-                  </CardContent>
-                </Card>
+              {projectTabs.map((project) => (
+                <button
+                  key={project.key}
+                  type="button"
+                  onClick={() => setActiveProject(project)}
+                  className="text-left transition"
+                  aria-pressed={activeProject.key === project.key}
+                >
+                  <Card
+                    className={
+                      activeProject.key === project.key
+                        ? "border-[color:var(--color-paper-border-strong)] bg-white shadow-[0_18px_40px_rgba(68,55,35,0.16)] ring-2 ring-[rgba(17,24,39,0.08)]"
+                        : "bg-[rgba(255,255,255,0.55)] opacity-45 saturate-50 transition hover:opacity-70"
+                    }
+                  >
+                    <CardContent className="p-7">
+                      <div
+                        className={
+                          activeProject.key === project.key
+                            ? "font-[family-name:var(--font-display)] text-2xl font-semibold text-[color:var(--color-paper-ink)]"
+                            : "font-[family-name:var(--font-display)] text-2xl font-semibold text-[rgba(17,24,39,0.55)]"
+                        }
+                      >
+                        {project.label}
+                      </div>
+                    </CardContent>
+                  </Card>
+                </button>
               ))}
             </div>
 
-            <div className="mt-12 grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
-              <Card className="border-white/10 bg-white/5 backdrop-blur-xl">
-                <CardContent className="p-7 md:p-8">
-                  <div className="text-xs uppercase tracking-[0.22em] text-emerald-300">Demonstration</div>
-                  <div className="mt-4 text-3xl font-semibold text-white">{exactCopy.demonstrationTitle}</div>
-                  <div className="mt-3 text-lg text-white/75">{exactCopy.demonstrationSubtitle}</div>
-                  <p className="mt-5 text-base leading-8 text-white/74">{exactCopy.demonstrationBody}</p>
-                </CardContent>
-              </Card>
-              <div className="grid gap-6">
-                {exactCopy.demonstrationApplications.map((item) => (
-                  <Card key={item.title} className="border-white/10 bg-white/5 backdrop-blur-xl">
-                    <CardContent className="p-6">
-                      <div className="text-lg font-medium text-white">{item.title}</div>
-                      <p className="mt-3 text-sm leading-7 text-white/72">{item.text}</p>
+            {activeProject.key === "foak" ? (
+              <div className="mt-12 grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
+                <Card className="overflow-hidden bg-[color:var(--color-paper-surface-strong)]">
+                  <div className="grid lg:grid-rows-[260px_auto]">
+                    <div className="overflow-hidden">
+                      <img src={activeProject.image} alt={activeProject.label} className="h-full w-full object-cover" />
+                    </div>
+                    <CardContent className="p-7 md:p-8">
+                      <div className="font-[family-name:var(--font-display)] text-3xl font-semibold text-[color:var(--color-paper-ink)]">
+                        {activeProject.title}
+                      </div>
+                      <div className="mt-3 text-lg text-[rgba(17,24,39,0.75)]">{activeProject.subtitle}</div>
+                      <p className="mt-5 text-base leading-8 text-[color:var(--color-paper-muted)]">{activeProject.body}</p>
                     </CardContent>
-                  </Card>
-                ))}
+                  </div>
+                </Card>
+                <div className="grid gap-6">
+                  {activeProject.applications.map((item, index) => (
+                    <Card
+                      key={item.title}
+                      className={
+                        index === 0
+                          ? "bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(239,231,219,0.92))]"
+                          : "bg-[color:var(--color-paper-surface-strong)]"
+                      }
+                    >
+                      <CardContent className="p-6 md:p-7">
+                        <div className="font-[family-name:var(--font-display)] text-2xl font-semibold text-[color:var(--color-paper-ink)]">
+                          {item.title}
+                        </div>
+                        <p className="mt-4 text-sm leading-7 text-[color:var(--color-paper-muted)]">{item.text}</p>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
               </div>
-            </div>
+            ) : (
+              <div className="mt-12 grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
+                <Card className="bg-[color:var(--color-paper-surface-strong)]">
+                  <CardContent className="p-7 md:p-8">
+                    <div className="overflow-hidden rounded-[1.5rem] border border-[color:var(--color-paper-border)] bg-[rgba(255,255,255,0.66)]">
+                      <img src={activeProject.image} alt={activeProject.label} className="h-[220px] w-full object-cover" />
+                    </div>
+                    <div className="mt-6 font-[family-name:var(--font-display)] text-3xl font-semibold text-[color:var(--color-paper-ink)]">{activeProject.title}</div>
+                    <div className="mt-3 text-lg text-[rgba(17,24,39,0.75)]">{activeProject.subtitle}</div>
+                    <p className="mt-5 text-base leading-8 text-[color:var(--color-paper-muted)]">{activeProject.body}</p>
+                  </CardContent>
+                </Card>
+                <div className="grid gap-6">
+                  {activeProject.applications.map((item) => (
+                    <Card key={item.title} className="bg-[color:var(--color-paper-surface-strong)]">
+                      <CardContent className="p-6">
+                        <div className="font-[family-name:var(--font-display)] text-lg font-medium text-[color:var(--color-paper-ink)]">{item.title}</div>
+                        <p className="mt-3 text-sm leading-7 text-[color:var(--color-paper-muted)]">{item.text}</p>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         </section>
 
         <section id="partners" className="mx-auto max-w-7xl px-6 py-24 lg:px-8">
-          <div className="grid gap-8 lg:grid-cols-[0.85fr_1.15fr]">
+          <div className="grid gap-8">
             <SectionHeading
-              eyebrow="Partners"
               title={exactCopy.partnersTitle}
               description={exactCopy.partnersIntro}
             />
-            <div className="grid gap-4 sm:grid-cols-2">
-              {exactCopy.partners.map((partner) => (
-                <Card key={partner} className="border-white/10 bg-white/5 backdrop-blur-xl">
-                  <CardContent className="p-6">
-                    <div className="text-base leading-7 text-white/84">{partner}</div>
-                  </CardContent>
-                </Card>
-              ))}
+            <div className="flex justify-center">
+              <Card className="w-full max-w-5xl bg-white">
+                <CardContent className="p-8 md:p-10">
+                  <img
+                    src={partnersImage}
+                    alt="MAAT Energy partners and supporters"
+                    className="w-full object-contain"
+                  />
+                </CardContent>
+              </Card>
             </div>
           </div>
         </section>
 
-        <section id="team" className="border-y border-white/10 bg-white/[0.03]">
-          <div className="mx-auto max-w-7xl px-6 py-24 lg:px-8">
-            <SectionHeading
-              eyebrow="Team"
-              title="Management and advisory team"
-              description="This section preserves the biographies available in the archived Team page."
-            />
+        <section id="team" className="border-y border-[color:var(--color-paper-border)] bg-[rgba(255,255,255,0.2)]">
+          <div className="relative overflow-hidden">
+            <img src={teamBackground} alt="" aria-hidden="true" className="absolute inset-0 h-full w-full object-cover opacity-88" />
+            <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(251,247,241,0.22),rgba(246,241,232,0.08)_38%,rgba(239,231,219,0.18))]" />
+            <div className="relative mx-auto flex min-h-[340px] max-w-7xl items-end px-6 py-12 lg:px-8">
+              <div className="max-w-3xl">
+                <h2 className="font-[family-name:var(--font-display)] text-3xl font-semibold tracking-[-0.04em] text-white md:text-5xl">
+                  Management and advisory team
+                </h2>
+              </div>
+            </div>
+          </div>
+          <div className="mx-auto max-w-7xl px-6 py-24 lg:px-8 pt-12">
             <div className="mt-12 grid gap-6 md:grid-cols-2">
               {exactCopy.team.map((person) => (
                 <PersonCard key={person.name} name={person.name} role={person.role} bio={person.bio} />
               ))}
             </div>
             <div className="mt-10">
-              <div className="text-xs uppercase tracking-[0.22em] text-white/45">Advisory Team</div>
-              <div className="mt-4 flex flex-wrap gap-3">
+              <div className="flex flex-wrap gap-3">
                 {exactCopy.advisors.map((advisor) => (
                   <BulletPill key={advisor}>{advisor}</BulletPill>
                 ))}
@@ -798,63 +545,53 @@ export default function MaatEnergyInvestorOnePager() {
         </section>
 
         <section id="funding" className="mx-auto max-w-7xl px-6 py-24 lg:px-8">
-          <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr]">
-            <SectionHeading
-              eyebrow="Funding"
-              title="Institutional support and credibility"
-              description="This section uses the original page language and packages it as a cleaner proof-point block."
-            />
-            <div className="grid gap-6 md:grid-cols-2">
-              <Card className="border-amber-200/15 bg-gradient-to-br from-amber-100/10 to-white/5 backdrop-blur-xl">
-                <CardContent className="p-7">
-                  <div className="mb-4 inline-flex rounded-2xl border border-amber-200/20 bg-amber-100/10 p-3 text-amber-200">
-                    <Award className="h-5 w-5" />
-                  </div>
-                  <div className="text-lg font-medium text-white">DOE support</div>
-                  <p className="mt-3 text-sm leading-7 text-white/72">{exactCopy.funding}</p>
-                </CardContent>
-              </Card>
-              <Card className="border-white/10 bg-white/5 backdrop-blur-xl">
-                <CardContent className="p-7">
-                  <div className="text-xs uppercase tracking-[0.22em] text-emerald-300">Recognition</div>
-                  <div className="mt-3 text-2xl font-semibold text-white">{exactCopy.awards}</div>
-                  <div className="mt-8 flex items-center gap-3 text-white/70">
-                    <MapPin className="h-4 w-4" />
-                    <span>{exactCopy.location}</span>
-                  </div>
-                </CardContent>
-              </Card>
+          <div className="grid gap-10 lg:grid-cols-[0.95fr_1.05fr] lg:items-center">
+            <div>
+              <h2 className="font-[family-name:var(--font-display)] text-3xl font-semibold tracking-[-0.04em] text-[color:var(--color-paper-ink)] md:text-5xl">
+                Funding
+              </h2>
+              <p className="mt-6 max-w-3xl text-base leading-8 text-[color:var(--color-paper-muted)] md:text-lg">
+                DOE supports scientific excellence and technological innovation through the investment of federal research funds in critical American priorities to build a strong national economy.{" "}
+                <a
+                  href="https://www.energy.gov/science/articles/department-energy-announces-142-million-grants-small-businesses"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-[color:var(--color-paper-ink)] underline underline-offset-4"
+                >
+                  MAAT Energy Awards
+                </a>
+              </p>
+            </div>
+            <div className="flex justify-center lg:justify-end">
+              <img src={sbirSttrImage} alt="SBIR STTR America's Seed Fund" className="w-full max-w-xl object-contain" />
             </div>
           </div>
         </section>
 
         <section id="contact" className="mx-auto max-w-7xl px-6 pb-24 lg:px-8">
-          <div className="overflow-hidden rounded-[2rem] border border-white/10 bg-gradient-to-br from-emerald-300/12 via-white/5 to-sky-300/10 p-8 backdrop-blur-2xl md:p-12">
+          <div className="overflow-hidden rounded-[2rem] border border-[color:var(--color-paper-border-strong)] bg-[linear-gradient(145deg,rgba(255,255,255,0.9),rgba(239,231,219,0.94))] p-8 shadow-[0_24px_80px_rgba(68,55,35,0.14)] backdrop-blur-md md:p-12">
             <div className="grid gap-10 lg:grid-cols-[1.2fr_0.8fr] lg:items-end">
               <div>
-                <div className="text-xs font-semibold uppercase tracking-[0.24em] text-emerald-300">Contact</div>
-                <h2 className="mt-4 text-3xl font-semibold tracking-tight text-white md:text-5xl">
-                  Static investor site foundation complete
+                <h2 className="font-[family-name:var(--font-display)] text-3xl font-semibold tracking-[-0.04em] text-[color:var(--color-paper-ink)] md:text-5xl">
+                  Connect with MAAT Energy
                 </h2>
-                <p className="mt-5 max-w-2xl text-base leading-8 text-white/74 md:text-lg">
-                  This version uses the wording recovered from the uploaded Google Sites archive and reorganizes it into a single continuous investor-facing page. The next build step would be converting this into a production site with Next.js, CMS-backed content, richer motion, analytics, and responsive navigation states.
+                <p className="mt-5 max-w-2xl text-base leading-8 text-[color:var(--color-paper-muted)] md:text-lg">
+                  Reach out to discuss technology, partnerships, pilot opportunities, and commercial deployment pathways for MAAT's modular carbon conversion platform.
                 </p>
               </div>
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
-                <Card className="border-white/10 bg-black/20 backdrop-blur-xl">
+                <Card className="bg-[rgba(255,255,255,0.66)]">
                   <CardContent className="p-6">
-                    <div className="mb-2 text-xs uppercase tracking-[0.22em] text-white/50">Headquarters</div>
-                    <div className="flex items-center gap-3 text-white">
-                      <MapPin className="h-4 w-4 text-emerald-300" />
+                    <div className="flex items-center gap-3 text-[color:var(--color-paper-ink)]">
+                      <MapPin className="h-4 w-4 text-[color:var(--color-paper-muted)]" />
                       <span>{exactCopy.location}</span>
                     </div>
                   </CardContent>
                 </Card>
-                <Card className="border-white/10 bg-black/20 backdrop-blur-xl">
+                <Card className="bg-[rgba(255,255,255,0.66)]">
                   <CardContent className="p-6">
-                    <div className="mb-2 text-xs uppercase tracking-[0.22em] text-white/50">Primary action</div>
-                    <a href="mailto:info@maatenergy.com" className="flex items-center gap-3 text-white transition hover:text-emerald-200">
-                      <Mail className="h-4 w-4 text-emerald-300" />
+                    <a href="mailto:info@maatenergy.com" className="flex items-center gap-3 text-[color:var(--color-paper-ink)] transition hover:text-[color:var(--color-paper-muted)]">
+                      <Mail className="h-4 w-4 text-[color:var(--color-paper-muted)]" />
                       <span>CONTACT US</span>
                     </a>
                   </CardContent>

@@ -10,8 +10,10 @@ const sizeClasses = {
 };
 
 const variantClasses = {
-  default: "",
-  outline: "border",
+  default:
+    "border-[color:var(--color-paper-accent)] bg-[color:var(--color-paper-accent)] text-white shadow-[0_14px_32px_rgba(17,17,17,0.12)] hover:-translate-y-0.5 hover:bg-[#2b2b2b]",
+  outline:
+    "border-[color:var(--color-paper-border-strong)] bg-[color:var(--color-paper-surface)] text-[color:var(--color-paper-ink)] hover:-translate-y-0.5 hover:border-[color:var(--color-paper-accent)] hover:bg-white",
 };
 
 export function Button({
@@ -22,7 +24,7 @@ export function Button({
   ...props
 }) {
   const classes = joinClasses(
-    "inline-flex items-center justify-center gap-2 whitespace-nowrap border-transparent font-medium transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 disabled:pointer-events-none disabled:opacity-50",
+    "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full border font-medium transition duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/30 focus-visible:ring-offset-2 focus-visible:ring-offset-[#f6f1e8] disabled:pointer-events-none disabled:opacity-50",
     sizeClasses[size] || sizeClasses.default,
     variantClasses[variant] || variantClasses.default,
     className,
